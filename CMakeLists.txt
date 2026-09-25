@@ -19,6 +19,7 @@ add_library(medialib STATIC
     src/Song.cpp
     src/Video.cpp
     src/Podcast.cpp
+    src/Audiobook.cpp
     src/MediaUtils.cpp
     src/Library.cpp
     src/Playlist.cpp
