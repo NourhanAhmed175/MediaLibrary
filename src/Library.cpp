@@ -18,6 +18,16 @@ int Library::add(std::shared_ptr<Media> media) {
     return id;
 }
 
+std::vector<std::shared_ptr<Media>> Library::findByType(const std::string& type) const {
+    std::vector<std::shared_ptr<Media>> results;
+    for (const auto& entry : m_byId) {
+        if (entry.second->getType() == type) {
+            results.push_back(entry.second);
+        }
+    }
+    return results;
+}
+
 void Library::remove(int id) {
     auto it = m_byId.find(id);
     if (it == m_byId.end()) {
