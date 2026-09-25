@@ -29,7 +29,8 @@ public:
     // Partial, case-insensitive match. Returns an empty vector when nothing matches.
     std::vector<std::shared_ptr<Media>> searchByTitle(const std::string& text) const;
 
-    std::vector<std::shared_ptr<Media>> all() const;                  // ordered by ID
+    std::vector<std::shared_ptr<Media>> all() const; 
+    std::vector<std::shared_ptr<Media>> findByType(const std::string& type) const;  // "Song", "Video", ...                 // ordered by ID
     std::vector<std::shared_ptr<Media>> sortedByTitle() const;
     std::vector<std::shared_ptr<Media>> sortedByDuration() const;
 
