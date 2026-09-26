@@ -81,6 +81,11 @@ int main() {
     } catch (const InvalidDurationException& e) {
         std::cout << "  Caught InvalidDurationException: " << e.what() << "\n";
     }
+    try {
+        Duration negative(-2, 0);
+    } catch (const InvalidDurationException& e) {
+        std::cout << "  Caught InvalidDurationException: " << e.what() << "\n";
+    }
 
     // ------------------------------------------------------------------
     section("5. Playlists share Media objects");
