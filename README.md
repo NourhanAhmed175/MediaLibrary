@@ -62,6 +62,7 @@ The core classes never read input and never print, so the demo driver and the me
 
 - Add songs, videos, and podcasts to the library (unique ID for each)
 - Search by title (exact and partial, ignoring case)
+- Filter the library by media type (e.g., all `Podcast`s or all `Video`s) with `Library::findByType()`, demonstrated in `demo.cpp`
 - Sort by title or by duration with `std::sort`
 - Create playlists; add and remove media; see total playing time
 - Play a playlist (each media type plays differently through a `Media` pointer)
