@@ -54,6 +54,13 @@ int main() {
     }
 
     // ------------------------------------------------------------------
+    section("2b. Search by type (Library::findByType)");
+    std::cout << "  Podcasts in the library:\n";
+    printAll(library.findByType("Podcast"));
+    std::cout << "  Videos in the library:\n";
+    printAll(library.findByType("Video"));
+
+    // ------------------------------------------------------------------
     section("3. Sorting with std::sort");
     std::cout << "  By title:\n";
     printAll(library.sortedByTitle());
