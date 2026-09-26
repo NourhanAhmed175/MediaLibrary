@@ -112,6 +112,24 @@ Run `./media_app`. Menu option numbers are in brackets. Start with option `15` (
 | 19 | At any prompt type `abc` | `Please enter a valid whole number.` and the prompt repeats; no crash |
 | 20 | Close the input (Ctrl+D on Linux/macOS, Ctrl+Z then Enter on Windows) | `Input closed. Goodbye!` and a normal exit |
 
+## What `./demo` should print (no input needed)
+
+`demo.cpp` is the non-interactive driver; running it should show, in order:
+
+| Section | What to check |
+|---|---|
+| 1. Library owns polymorphic Media objects | `Loaded 7 items.`; total library time `2:06:55`; static counter reads `7` |
+| 2. Search by title | Exact search for `"blinding LIGHTS"` finds Blinding Lights; partial search `"pointers"` finds 2 items; a missing title throws `MediaNotFoundException` |
+| 2b. Search by type | `findByType("Podcast")` returns 2 items; `findByType("Video")` returns 2 items |
+| 3. Sorting | Library sorted by title and by duration, both in the expected order |
+| 4. Duration operators | `a + b = 6:15`; invalid seconds (`1:75`) and negative minutes (`-2:00`) both throw `InvalidDurationException` |
+| 5. Playlists | `"Road Trip"` (4 items, `0:58:55`) and `"Study Time"` (3 items, `1:21:05`) share the `Smart Pointers Weekly` podcast |
+| 6. Memory spotlight | `use_count` rises to 3 as an item joins the library + 2 playlists, drops to 0 when the last owner releases it, and `observer.expired()` flips to `true` |
+| 7. Exceptions | `DuplicateMediaException`, `MediaNotFoundException`, `PlaylistNotFoundException`, and the base `MediaException` are each caught with a clear message |
+| 8. Polymorphism | The same `item->play()` call prints different text for a Podcast vs. a Video |
+
+If any of the above doesn't match, something in the library logic (not just the demo) has regressed.
+
 ## Not used (optional stretch goals)
 
 File I/O, templates, lambdas, `std::optional`, unit-test framework. The sort comparators are plain functions in `MediaUtils.cpp`.
