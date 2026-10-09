@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "Audiobook.h"
 #include "Library.h"
 #include "MediaExceptions.h"
 #include "PlaylistManager.h"
@@ -166,6 +167,18 @@ int main() {
     // ------------------------------------------------------------------
     section("8. Polymorphism: same call, different behaviour");
     for (const auto& item : study.items()) {
+        std::cout << "  " << item->play() << "\n";
+    }
+
+    // ------------------------------------------------------------------
+    section("9. Open/Closed: a new media type without changing Library or Playlist");
+    Library bookShelf;   // separate library so the numbers above stay the same
+    bookShelf.add(std::make_shared<Audiobook>("Clean Code", Duration(95, 30), "Robert C. Martin", "Narrator A"));
+    Playlist commute("Commute");
+    commute.add(bookShelf.findByTitle("Clean Code"));
+    std::cout << "  " << commute.summary() << "\n";
+    for (const auto& item : commute.items()) {
+        std::cout << "  " << item->describe() << "\n";
         std::cout << "  " << item->play() << "\n";
     }
 
