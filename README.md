@@ -19,6 +19,7 @@ cmake --build .
 
 ./demo         # runs every feature end to end, no input needed   (Windows: demo.exe)
 ./media_app    # interactive console menu                          (Windows: media_app.exe)
+./tests        # self-checking tests, prints "N/N checks passed."  (Windows: tests.exe)
 ```
 
 The project compiles with `-Wall -Wextra` (`/W4` on MSVC) and produces no warnings.
@@ -35,13 +36,13 @@ MediaLibrary/
 │   ├── MediaExceptions.h    custom exceptions
 │   ├── Duration.h           VALUE CLASS  (minutes:seconds)
 │   ├── Media.h              ABSTRACT BASE CLASS
-│   ├── Song.h  Video.h  Podcast.h      concrete classes
+│   ├── Song.h  Video.h  Podcast.h  Audiobook.h   concrete classes
 │   ├── MediaUtils.h         toLower + std::sort comparison functions
 │   ├── Library.h            owns the catalogue
 │   ├── Playlist.h           HAS-A list of shared Media
 │   ├── PlaylistManager.h    playlists by name
 │   └── SampleData.h
-└── src/                     (.cpp files + main.cpp menu + demo.cpp driver)
+└── src/                     (.cpp files + main.cpp menu + demo.cpp driver + tests.cpp)
 ```
 
 ## Class design
@@ -49,7 +50,7 @@ MediaLibrary/
 | Class | Role |
 |-------|------|
 | `Media` (abstract) | Pure virtual `getType()` and `describe()`; virtual `play()` with a default; virtual destructor; `static` ID counter. Copying is deleted because every object has a unique ID. |
-| `Song`, `Video`, `Podcast` | Concrete classes, each with its own metadata and its own `describe()` / `play()` (`override`). |
+| `Song`, `Video`, `Podcast`, `Audiobook` | Concrete classes, each with its own metadata and its own `describe()` / `play()` (`override`). |
 | `Duration` | Value class: `+`, `+=`, `==`, `!=`, `<`, `>`, friend `operator<<`. Rule of 0. |
 | `Library` | Owns all media in `std::map<int, shared_ptr<Media>>` plus a `std::map<string,int>` title index. Search, sort, remove. |
 | `Playlist` | HAS-A `vector<shared_ptr<Media>>`. Add, remove, total duration, sort. |
@@ -60,7 +61,7 @@ The core classes never read input and never print, so the demo driver and the me
 
 ## Features
 
-- Add songs, videos, and podcasts to the library (unique ID for each)
+- Add songs, videos, podcasts, and audiobooks to the library (unique ID for each)
 - Search by title (exact and partial, ignoring case)
 - Filter the library by media type (e.g., all `Podcast`s or all `Video`s) with `Library::findByType()`, demonstrated in `demo.cpp`
 - Sort by title or by duration with `std::sort`
@@ -81,7 +82,7 @@ The core classes never read input and never print, so the demo driver and the me
 ## SOLID principles applied
 
 - **Single Responsibility:** `Library` manages the catalogue, `Playlist` manages one list, `PlaylistManager` manages playlist names, `Duration` only handles time.
-- **Open/Closed:** to add a new media type (e.g. `Audiobook`), write a new class that derives from `Media`. `Library`, `Playlist`, and the sorting code do not change.
+- **Open/Closed:** to add a new media type (e.g. `Audiobook`, shown in demo section 9), write a new class that derives from `Media`. `Library`, `Playlist`, and the sorting code do not change.
 - **Liskov Substitution:** `Song`, `Video`, and `Podcast` can be used anywhere a `Media` is expected (`Library` and `Playlist` only use the `Media` interface).
 - **Dependency Inversion:** `Library` and `Playlist` depend on the abstract `Media`, not on concrete classes.
 
@@ -110,6 +111,7 @@ Run `./media_app`. Menu option numbers are in brackets. Start with option `15` (
 | 17 | `14` -> `Mix` (after case 16) | `Now playing song: "Blinding Lights" by The Weeknd` (item still works) |
 | 18 | `8` -> ID `999` | `Error: No media with ID 999 in the library` |
 | 19 | At any prompt type `abc` | `Please enter a valid whole number.` and the prompt repeats; no crash |
+| 21 | `16` -> title `Clean Code`, 95 min 30 sec, author `A`, narrator `B` | `Added audiobook with ID 8.` (after loading sample data) |
 | 20 | Close the input (Ctrl+D on Linux/macOS, Ctrl+Z then Enter on Windows) | `Input closed. Goodbye!` and a normal exit |
 
 ## What `./demo` should print (no input needed)
@@ -127,9 +129,10 @@ Run `./media_app`. Menu option numbers are in brackets. Start with option `15` (
 | 6. Memory spotlight | `use_count` rises to 3 as an item joins the library + 2 playlists, drops to 0 when the last owner releases it, and `observer.expired()` flips to `true` |
 | 7. Exceptions | `DuplicateMediaException`, `MediaNotFoundException`, `PlaylistNotFoundException`, and the base `MediaException` are each caught with a clear message |
 | 8. Polymorphism | The same `item->play()` call prints different text for a Podcast vs. a Video |
+| 9. Open/Closed | A new `Audiobook` type goes into a separate library and a playlist with no change to `Library` or `Playlist` |
 
 If any of the above doesn't match, something in the library logic (not just the demo) has regressed.
 
 ## Not used (optional stretch goals)
 
-File I/O, templates, lambdas, `std::optional`, unit-test framework. The sort comparators are plain functions in `MediaUtils.cpp`.
+File I/O, templates, lambdas, `std::optional`, an external unit-test framework (`tests.cpp` uses plain checks instead). The sort comparators are plain functions in `MediaUtils.cpp`.
