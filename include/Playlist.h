@@ -30,7 +30,7 @@ public:
     void sortByTitle();
     void sortByDuration();
 
-    std::string summary() const;               // e.g.  Playlist "Road Trip": 4 item(s), total 0:19:20
+    std::string summary() const;               // e.g.  Playlist "Road Trip": 4 item(s), total time 0:58:55
 
 private:
     std::string m_name;
