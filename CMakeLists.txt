@@ -35,3 +35,7 @@ target_link_libraries(media_app PRIVATE medialib)
 # Demo driver: runs every feature end to end, no input needed
 add_executable(demo src/demo.cpp)
 target_link_libraries(demo PRIVATE medialib)
+
+# Self-checking tests: exit code 0 = all checks passed
+add_executable(tests src/tests.cpp)
+target_link_libraries(tests PRIVATE medialib)
