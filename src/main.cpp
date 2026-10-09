@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "Audiobook.h"
 #include "Library.h"
 #include "MediaExceptions.h"
 #include "Playlist.h"
@@ -82,6 +83,7 @@ void printMenu() {
               << "13) List playlists\n"
               << "14) Play playlist\n"
               << "15) Load sample data\n"
+              << "16) Add audiobook\n"
               << " 0) Exit\n";
 }
 
@@ -110,6 +112,15 @@ void addPodcast(Library& library) {
     const int episode = readInt("Episode number: ");
     const int id = library.add(std::make_shared<Podcast>(title, duration, host, episode));
     std::cout << "Added podcast with ID " << id << ".\n";
+}
+
+void addAudiobook(Library& library) {
+    const std::string title = readLine("Title: ");
+    const Duration duration = readDuration();
+    const std::string author = readLine("Author: ");
+    const std::string narrator = readLine("Narrator: ");
+    const int id = library.add(std::make_shared<Audiobook>(title, duration, author, narrator));
+    std::cout << "Added audiobook with ID " << id << ".\n";
 }
 
 void listLibrary(const Library& library) {
@@ -210,6 +221,7 @@ int main() {
                     case 15:
                         std::cout << "Loaded " << loadSampleData(library) << " sample item(s).\n";
                         break;
+                    case 16: addAudiobook(library); break;
                     case 0:  running = false; break;
                     default: std::cout << "Unknown option. Please choose from the menu.\n";
                 }
