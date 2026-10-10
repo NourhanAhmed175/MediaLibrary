@@ -1,6 +1,7 @@
 #pragma once
 #include "Media.h"
 
+// An audiobook: adds the author's name and the narrator's name.
 class Audiobook : public Media {
 public:
     Audiobook(const std::string& title, const Duration& duration,
