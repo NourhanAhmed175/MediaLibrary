@@ -42,3 +42,4 @@ Open/Closed: write one new class deriving from `Media` and implement `getType()`
 `getType()` and `describe()` are pure virtual, so `Media m("x", Duration(1,0));` does not compile. Each concrete class must override both or it stays abstract.
 
 **12. Live-change practice:** add a new `Audiobook` class (author + narrator), add one sample item, and check that it appears in search, sorting, and playlists with no changes to other files.
+- Q13: Why is Duration a value class and not polymorphic? Because it represents a simple data value (time), not a type hierarchy, so Rule of 0 and value semantics fit better than inheritance.
