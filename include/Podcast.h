@@ -1,6 +1,7 @@
 #pragma once
 #include "Media.h"
 
+// A podcast episode: adds the host's name and the episode number.
 class Podcast : public Media {
 public:
     Podcast(const std::string& title, const Duration& duration,
