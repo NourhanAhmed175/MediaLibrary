@@ -42,3 +42,7 @@ Open/Closed: write one new class deriving from `Media` and implement `getType()`
 `getType()` and `describe()` are pure virtual, so `Media m("x", Duration(1,0));` does not compile. Each concrete class must override both or it stays abstract.
 
 **12. Live-change practice:** add a new `Audiobook` class (author + narrator), add one sample item, and check that it appears in search, sorting, and playlists with no changes to other files.
+- Q13: Why is Duration a value class and not polymorphic? Because it represents a simple data value (time), not a type hierarchy, so Rule of 0 and value semantics fit better than inheritance.
+- Q14: Which operators does Duration overload and why? It overloads +, +=, ==, != and the comparison operators so two durations can be added and compared like normal numbers. The output operator is a friend so std::cout can print a Duration as minutes and seconds.
+- Q15: Why do all custom exceptions derive from MediaException? MediaException derives from std::exception, so one catch of the base class handles every error from this project, while MediaNotFoundException and DuplicateMediaException let the code react to one exact problem.
+- Q16: What is demo.cpp for? It is a driver that runs every feature from start to end with no menu input, so all features and the use_count behaviour can be seen in one run.
