@@ -12,34 +12,7 @@
 #include "Video.h"
 #include "Podcast.h"
 
-void testMediaTypes() {
-    Podcast podcast("Tech Talk", Duration(30, 0), "Sara", 5);
-    check(podcast.getType() == "Podcast", "Podcast reports its type");
-    check(podcast.describe().find("Episode 5") != std::string::npos, "Podcast describe shows the episode");
-    check(podcast.play().find("episode 5") != std::string::npos, "Podcast play mentions the episode");
-    check(throwsType<MediaException>([] { Podcast("Bad", Duration(10, 0), "Host", 0); }),
-          "podcast episode number 0 rejected");
 
-    Video video("Intro to C++", Duration(12, 30), "Eng. Karim", "1080p");
-    check(video.getType() == "Video", "Video reports its type");
-    check(video.describe().find("Directed by Eng. Karim") != std::string::npos, "Video describe shows the director");
-    check(video.play().find("1080p") != std::string::npos, "Video play mentions the resolution");
-
-    Song song("Blinding Lights", Duration(3, 20), "The Weeknd", "After Hours");
-    check(song.getType() == "Song", "Song reports its type");
-    check(song.getArtist() == "The Weeknd", "Song keeps its artist");
-
-    check(throwsType<MediaException>([] { Song("", Duration(1, 0), "A", "B"); }), "empty title rejected");
-    check(throwsType<InvalidDurationException>([] { Song("Silent", Duration(0, 0), "A", "B"); }),
-          "zero length rejected");
-
-    const int before = Media::getCreatedCount();
-    try {
-        Song("", Duration(1, 0), "A", "B");
-    } catch (const MediaException&) {
-    }
-    check(Media::getCreatedCount() == before, "a failed constructor does not use up an ID");
-}
 namespace {
 
 int g_failed = 0;
@@ -109,13 +82,42 @@ void testSharedOwnership() {
     check(observer.expired(), "item destroyed when the last owner lets go");
 }
 
+void testMediaTypes() {
+    Podcast podcast("Tech Talk", Duration(30, 0), "Sara", 5);
+    check(podcast.getType() == "Podcast", "Podcast reports its type");
+    check(podcast.describe().find("Episode 5") != std::string::npos, "Podcast describe shows the episode");
+    check(podcast.play().find("episode 5") != std::string::npos, "Podcast play mentions the episode");
+    check(throwsType<MediaException>([] { Podcast("Bad", Duration(10, 0), "Host", 0); }),
+          "podcast episode number 0 rejected");
+
+    Video video("Intro to C++", Duration(12, 30), "Eng. Karim", "1080p");
+    check(video.getType() == "Video", "Video reports its type");
+    check(video.describe().find("Directed by Eng. Karim") != std::string::npos, "Video describe shows the director");
+    check(video.play().find("1080p") != std::string::npos, "Video play mentions the resolution");
+
+    Song song("Blinding Lights", Duration(3, 20), "The Weeknd", "After Hours");
+    check(song.getType() == "Song", "Song reports its type");
+    check(song.getArtist() == "The Weeknd", "Song keeps its artist");
+
+    check(throwsType<MediaException>([] { Song("", Duration(1, 0), "A", "B"); }), "empty title rejected");
+    check(throwsType<InvalidDurationException>([] { Song("Silent", Duration(0, 0), "A", "B"); }),
+          "zero length rejected");
+
+    const int before = Media::getCreatedCount();
+    try {
+        Song("", Duration(1, 0), "A", "B");
+    } catch (const MediaException&) {
+    }
+    check(Media::getCreatedCount() == before, "a failed constructor does not use up an ID");
+}
+
 }  // namespace
 
 int main() {
-    testMediaTypes();
     testDuration();
     testLibrary();
     testSharedOwnership();
+    testMediaTypes();
     std::cout << (g_total - g_failed) << "/" << g_total << " checks passed.\n";
     return g_failed == 0 ? 0 : 1;
 }
