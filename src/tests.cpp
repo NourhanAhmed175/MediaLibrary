@@ -141,6 +141,21 @@ void testPlaylist() {
     check(throwsType<MediaNotFoundException>([&] { mix.removeById(c->getId()); }), "removing a missing item throws");
     check(mix.summary() == "Playlist \"Mix\": 2 item(s), total time 0:07:30", "summary text");
 }
+void testPlaylistManager() {
+    PlaylistManager manager;
+    manager.create("Study");
+    manager.create("Gym");
+    check(manager.exists("Gym"), "created playlist exists");
+    check(!manager.exists("Party"), "unknown playlist does not exist");
+    check(manager.names().size() == 2, "names lists every playlist");
+    check(manager.names().front() == "Gym", "names are in alphabetical order");
+    check(throwsType<DuplicateMediaException>([&] { manager.create("Gym"); }), "duplicate playlist name rejected");
+    check(throwsType<PlaylistNotFoundException>([&] { manager.get("Party"); }), "get unknown playlist throws");
+
+    manager.remove("Gym");
+    check(!manager.exists("Gym"), "removed playlist is gone");
+    check(throwsType<PlaylistNotFoundException>([&] { manager.remove("Gym"); }), "removing twice throws");
+}
 }  // namespace
 
 int main() {
@@ -149,6 +164,7 @@ int main() {
     testSharedOwnership();
     testMediaTypes();
     testPlaylist();
+    testPlaylistManager();
     std::cout << (g_total - g_failed) << "/" << g_total << " checks passed.\n";
     return g_failed == 0 ? 0 : 1;
 }
