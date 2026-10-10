@@ -138,3 +138,4 @@ If any of the above doesn't match, something in the library logic (not just the 
 
 File I/O, templates, lambdas, `std::optional`, an external unit-test framework (`tests.cpp` uses plain checks instead). The sort comparators are plain functions in `MediaUtils.cpp`.
 | 21 | Add a podcast with episode number 0 | Error: Podcast episode number must be positive || 22 | Create a playlist, then try to create another with the exact same name | Error: A playlist called ... already exists |Testing pull request workflow
+| 12 | Search media by partial title (case-insensitive) | Returns matching items regardless of case |
