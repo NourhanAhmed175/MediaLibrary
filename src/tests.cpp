@@ -156,6 +156,23 @@ void testPlaylistManager() {
     check(!manager.exists("Gym"), "removed playlist is gone");
     check(throwsType<PlaylistNotFoundException>([&] { manager.remove("Gym"); }), "removing twice throws");
 }
+void testAudiobook() {
+    Audiobook book("Clean Code", Duration(95, 30), "Robert C. Martin", "Narrator A");
+    check(book.getType() == "Audiobook", "Audiobook reports its type");
+    check(book.getAuthor() == "Robert C. Martin", "Audiobook keeps its author");
+    check(book.getNarrator() == "Narrator A", "Audiobook keeps its narrator");
+    check(book.describe().find("Narrated by Narrator A") != std::string::npos, "Audiobook describe shows the narrator");
+    check(book.play().find("audiobook") != std::string::npos, "Audiobook play mentions audiobook");
+
+    // Open/Closed: Library and Playlist accept the new type with no changes
+    Library library;
+    PlaylistManager playlists;
+    const int id = library.add(std::make_shared<Audiobook>("Deep Work", Duration(60, 0), "Cal Newport", "Narrator B"));
+    playlists.create("Commute").add(library.findById(id));
+    check(library.findByType("Audiobook").size() == 1, "findByType finds the audiobook");
+    check(playlists.get("Commute").totalDuration() == Duration(60, 0), "audiobook counts in playlist time");
+}
+
 }  // namespace
 
 int main() {
@@ -165,6 +182,7 @@ int main() {
     testMediaTypes();
     testPlaylist();
     testPlaylistManager();
+    testAudiobook();
     std::cout << (g_total - g_failed) << "/" << g_total << " checks passed.\n";
     return g_failed == 0 ? 0 : 1;
 }
