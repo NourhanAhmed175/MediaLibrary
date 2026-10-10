@@ -1,6 +1,7 @@
 #pragma once
 #include "Media.h"
 
+// A video: adds the director's name and the resolution (for example 720p).
 class Video : public Media {
 public:
     Video(const std::string& title, const Duration& duration,
