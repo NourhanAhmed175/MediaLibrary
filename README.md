@@ -137,3 +137,4 @@ If any of the above doesn't match, something in the library logic (not just the 
 ## Not used (optional stretch goals)
 
 File I/O, templates, lambdas, `std::optional`, an external unit-test framework (`tests.cpp` uses plain checks instead). The sort comparators are plain functions in `MediaUtils.cpp`.
+| 21 | Add a podcast with episode number 0 | Error: Podcast episode number must be positive |
