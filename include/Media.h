@@ -3,7 +3,7 @@
 #include "Duration.h"
 
 // Abstract base class: the "contract" every kind of media must fulfil.
-// Song, Video and Podcast provide getType() and describe().
+// Song, Video, Podcast and Audiobook provide getType() and describe().
 class Media {
 public:
     Media(const std::string& title, const Duration& duration);
