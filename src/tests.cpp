@@ -110,7 +110,37 @@ void testMediaTypes() {
     }
     check(Media::getCreatedCount() == before, "a failed constructor does not use up an ID");
 }
+void testPlaylist() {
+    auto a = std::make_shared<Song>("apple", Duration(3, 0), "Artist", "Album");
+    auto b = std::make_shared<Song>("Banana", Duration(4, 30), "Artist", "Album");
+    auto c = std::make_shared<Video>("Cherry", Duration(1, 0), "Director", "720p");
 
+    Playlist mix("Mix");
+    check(mix.empty(), "new playlist is empty");
+    mix.add(b);
+    mix.add(c);
+    mix.add(a);
+    check(mix.size() == 3, "playlist size after three adds");
+    check(mix.totalDuration() == Duration(8, 30), "total duration adds every item");
+    check(throwsType<DuplicateMediaException>([&] { mix.add(a); }), "same item twice rejected");
+    check(throwsType<MediaException>([&] { mix.add(nullptr); }), "null item rejected");
+    check(throwsType<MediaException>([] { Playlist(""); }), "empty playlist name rejected");
+
+    mix.sortByTitle();
+    check(mix.items().front()->getTitle() == "apple", "sortByTitle ignores case");
+    check(mix.items().back()->getTitle() == "Cherry", "sortByTitle puts Cherry last");
+    mix.sortByDuration();
+    check(mix.items().front()->getTitle() == "Cherry", "sortByDuration puts the shortest first");
+
+    Playlist copy = mix;
+    check(copy.items().front().get() == mix.items().front().get(), "a copied playlist shares the same objects");
+
+    mix.removeById(c->getId());
+    check(!mix.contains(c->getId()), "removed item is gone");
+    check(copy.contains(c->getId()), "the copy still holds the item");
+    check(throwsType<MediaNotFoundException>([&] { mix.removeById(c->getId()); }), "removing a missing item throws");
+    check(mix.summary() == "Playlist \"Mix\": 2 item(s), total time 0:07:30", "summary text");
+}
 }  // namespace
 
 int main() {
@@ -118,6 +148,7 @@ int main() {
     testLibrary();
     testSharedOwnership();
     testMediaTypes();
+    testPlaylist();
     std::cout << (g_total - g_failed) << "/" << g_total << " checks passed.\n";
     return g_failed == 0 ? 0 : 1;
 }
