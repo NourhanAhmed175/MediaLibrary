@@ -69,6 +69,7 @@ The core classes never read input and never print, so the demo driver and the me
 - Play a playlist (each media type plays differently through a `Media` pointer)
 - Removing an item from the library never breaks a playlist that still holds it
 - Friendly error messages: the program does not crash on bad input
+- Run the self-checking tests with the `tests` target (`./tests`)
 
 ## Memory spotlight: `shared_ptr`
 
